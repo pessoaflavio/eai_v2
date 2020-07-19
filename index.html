@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <script src="https://d3js.org/d3-color.v1.min.js"></script>
+        <script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+        <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-legend/2.24.0/d3-legend.js"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js"></script>
+        <title>Raio-x das Agências</title>
+        <link href="https://fonts.googleapis.com/css2?family=Bungee&family=IBM+Plex+Mono:wght@400;700&family=IBM+Plex+Sans:ital,wght@0,100;0,400;0,700;1,400&family=IBM+Plex+Serif:ital,wght@0,100;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="assets/style.css">
+    </head>
+    <body>
+        <div class='chapeu'>
+            <div class='marca'>
+                <svg>
+                    <rect width='15' height=4 x=9></rect>
+                </svg>
+                <p>Como é trabalhar aí 2.0</p>
+            </div>
+            <div class='menu'>
+                <a href="#part1">Mapa</a><a href="#part2">Sentimentos</a><a href="#part3">Categorias</a><a href="#part4">Subcategorias</a><a href="#sobre">Sobre</a>
+            </div> 
+        </div>
+        <div class='abre'>
+            
+            <div class='titulo'><u>E aí, como é que tá lá?</u> Um retrato de quem vive as agências de publicidade brasileiras</div>
+            <p>Uma tabela com a pergunta ao lado convidou publicitários a escreverem sobre as suas experiências de trabalho em agências de publicidade brasileiras. A pesquisa informal viralizou – em menos de 10 dias foram mais de 2.200 respostas – , revelando a realidade de dentro das agências.</p>
+            <p>Queremos expor o cenário e abrir o diálogo com as agências, associações e profissionais para buscarmos juntos caminhos de soluções. <strong>Deixamos aqui o nosso convite aos colaboradores, líderes, gestores, RH e quem mais quiser entrar na roda: Vamos co-criar?</strong> @wonderboom.cc</p>
+        </div>
+            
+        <div class='part' id='part1'>
+
+            <div class="destaque">
+                <p>numeros gerais da análise</p>
+                <div class='destaque_2linha'>
+                    <div class="texto_destaque">
+                        <span class="numero_mono">2.281</span> respondentes
+                    </div>
+                    <!-- <svg viewBox="0 0 500 500" class="gutter" preserveAspectRatio='none'>
+                        <line x1="500" y1="0" x2="0" y2="500"/>
+                    </svg> -->
+                    <div class="texto_destaque">
+                        <span class="numero_mono">1.188</span> pessoas com comentários adicionados
+                    </div>
+                    <!-- <svg viewBox="0 0 500 500" class="gutter" preserveAspectRatio='none'>
+                        <line x1="500" y1="0" x2="0" y2="500"/>
+                    </svg> -->
+                    <div class="texto_destaque">
+                        <span class="numero_mono">03 a 13/05/2018</span> período analisado
+                    </div>
+                </div>
+            </div>   
+
+            <div class='container_item'>
+                <div class='texto_conteudo'>
+                    <h1>Comentários pelo Brasil</h1>
+                    <p>São citadas 495 agências brasileiras, de todas as regiões. 33 das 50 maiores agências apareceram por lá*.</p>
+                    <p><small>*Fonte: Ranking de agências 2017 - Kantar Ibope Media</small></p>
+                </div>
+                <div class="conteudo">
+                    <div id='viz0'></div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <div class='part' id='part2'>
+            <div class="container_item">
+                <div class="texto_conteudo">
+                    <h1>Não tá nada fácil</h1>
+                    <p>Os comentários puderam ser divididos em <span class='numeroInterno'>71%</span> negativos, <span class='numeroInterno'>29%</span> positivos.</p>
+                    <p>Mesmo entre os comentários positivos, muitos demonstram uma expectativa baixa em relação ao mercado, com respostas que começam com “Para uma agência, até que...” chegando a “Agradeço por ter emprego”.</p>
+                </div>
+                <div class="conteudo">
+                    <div id='viz1'></div>
+                </div>
+            </div>
+            
+        </div>
+        
+        <div class='part' id='part3'>
+            <div class="container_item">
+                <div class="texto_conteudo">
+                    <h1>As nove categorias</h1>
+                    <p>As respostas eram livres e, por isso, abordam um ou mais temas. Em média, foram 3.5 temas citados/por resposta, o que mostra que os problemas nas agências são múltiplos.</p>
+                    <p>Em geral, os temas que aparecem com maior destaque são questões sobre ética, profissionalismo e responsabilidades, que se refletem no cotidiano de quem trabalha lá dentro. Separamos as respostas em 9 grandes categorias.</p>
+                </div>
+                <div class="conteudo">
+                    <div id='viz2'></div>
+                </div>
+            </div>
+            
+            
+        </div>
+        
+        <div class='part' id='part4'>
+            <div class="container_item">
+                <div class="texto_conteudo">
+                    <h1>E o prêmio vai para...</h1>
+                    <p>Dentro das categorias observamos alguns temas recorrentes:</p>
+                </div>
+                <div class="conteudo">
+                    <div id='subcat_holder'></div>
+                </div>
+            </div>
+        </div>
+        
+    <footer id='sobre'>
+        <div>Sobre o projeto</div>
+        <div class='ficha_metodologia' >
+            <p> 1> Os dados foram gerados por perguntas abertas de maneira anônima, sem qualquer interferência ou responsabilidade da Wonderboom. <strong>Fonte:</strong> <a href='https://docs.google.com/spreadsheets/u/1/d/1oaUtNdlS4JUu7RFtOtFnWOX41zg1fRZ3N2DEHTLmniM/htmlview?usp=sharing&sle=true' target='blank'>Como é trabalhar aí 2.0</a></p> 
+            <p> 2> Lembramos que essa é uma <a href='https://docs.google.com/spreadsheets/u/1/d/1oaUtNdlS4JUu7RFtOtFnWOX41zg1fRZ3N2DEHTLmniM/htmlview?usp=sharing&sle=true' target='blank'>tabela aberta e espontânea</a>. Ressaltamos que a tendência é de que as respostas sejam dadas por pessoas com motivações mais extremas, negativas ou positivas.</p>
+            <p> 3> Análise, concepção e textos: <a href='https://www.wonderboom.cc/' target='blank'>Wonderboom</a></p>
+            <p> 4> Design, gráficos e programação: <a href='https://fdidini.com' target='blank'>Fernanda Didini</a> & <a href='https://flaviopessoa.com.br' target='blank'>Flávio Pessoa</a></p> 
+        </div>
+        
+    </footer>
+
+    <script src='assets/sketch0.js'></script>
+    <script src='assets/sketch.js'></script>
+    <script src='assets/sketch2.js'></script>
+    <script src='assets/sketch3.js'></script>
+    <script>
+        document.getElementByClassName("menulink").addEventListener("hover", function(){
+            document.getElementById("littepop").innerHTML = "Hello World";
+        });
+    </script>
+    
+    </body>
+</html>
