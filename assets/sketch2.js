@@ -41,7 +41,7 @@ function displaySVGCorrectHeight(){
         svg_create(fixed_heigth)
         elementw = svg.node().getBoundingClientRect();
         width = elementw.width;
-        height = elementw.height;
+        height = 400;
         spacer = width/16;
         spacerH = height/8;
     } else {
@@ -49,7 +49,7 @@ function displaySVGCorrectHeight(){
         svg_create(fixed_heigth)
         elementw = svg.node().getBoundingClientRect();
         width = elementw.width;
-        height = elementw.height;
+        height = 550;
         spacer = width/8;   
         spacerH = height/4;
     }
