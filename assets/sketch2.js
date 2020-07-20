@@ -25,7 +25,7 @@ function svg_create2(height) {
 
     svg = d3
     .select('#viz2')
-    .style('background-color','#ebf5f5')
+    // .style('background-color','#ebf5f5')
     .append('svg')
     .attr('width', '100%')
     .attr('height', height)
