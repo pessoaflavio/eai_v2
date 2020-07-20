@@ -16,6 +16,7 @@ let colorScale = d3.scaleThreshold()
     ;
 
 function svg_create(height) {
+
     svg = d3
     .select('#viz0')
     .append('svg')
@@ -26,7 +27,7 @@ function svg_create(height) {
 }
 
 
-function displaySVGCorrectHeight(){
+function displaySVGCorrectHeight0(){
     // Get width and height of the window excluding scrollbars
     w = document.documentElement.clientWidth; 
         
@@ -52,15 +53,15 @@ function displaySVGCorrectHeight(){
         
         svg_create(fixed_heigth)
     }
-    console.log(fixed_heigth, spacer)
+    console.log('1st listener')
     
 }
 
 // Attaching the event listener function to window's resize event
-window.addEventListener("resize", displaySVGCorrectHeight);
+// window.addEventListener("resize", displaySVGCorrectHeight0);
 
 // Calling the function for the first time
-displaySVGCorrectHeight();
+displaySVGCorrectHeight0();
 
 console.log(svg)
 

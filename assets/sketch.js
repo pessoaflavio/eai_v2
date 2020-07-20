@@ -8,6 +8,7 @@ console.log(data);
 
 
 function svg_create(height) {
+
     svg = d3
     .select('#viz1')
     // .style('background-color','#ebf5f5')
@@ -17,7 +18,7 @@ function svg_create(height) {
     ;
 }
 
-function displaySVGCorrectHeight(){
+function displaySVGCorrectHeight1(){
     // Get width and height of the window excluding scrollbars
     w = document.documentElement.clientWidth; 
 
@@ -34,15 +35,15 @@ function displaySVGCorrectHeight(){
         width = elementw.width;
         spacer = width/5;   
     }
-    console.log(fixed_heigth, spacer)
+    console.log('second listener')
     
 }
 
 // Attaching the event listener function to window's resize event
-window.addEventListener("resize", displaySVGCorrectHeight);
+// window.addEventListener("resize", displaySVGCorrectHeight1);
 
 // Calling the function for the first time
-displaySVGCorrectHeight();
+displaySVGCorrectHeight1();
 
 //carregar 1o infografico - loading our 1st viz
 function drawCircleComments(){

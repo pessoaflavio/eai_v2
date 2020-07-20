@@ -20,12 +20,13 @@ console.log(data);
     
 //carregar 2o infografico - loading our 2nd viz
 
-function svg_create(height) {
+function svg_create2(height) {
+    console.log('over here')
+
     svg = d3
     .select('#viz2')
-    // .style('background-color','#ebf5f5')
+    .style('background-color','#ebf5f5')
     .append('svg')
-    .attr('class', 'secondViz')
     .attr('width', '100%')
     .attr('height', height)
     ;
@@ -38,39 +39,48 @@ function displaySVGCorrectHeight(){
 
     if (w<800){
         fixed_heigth = '400'
-        svg_create(fixed_heigth)
+        svg_create2(fixed_heigth)
         elementw = svg.node().getBoundingClientRect();
         width = elementw.width;
-        height = 400;
         spacer = width/16;
+
+        height = 400;
         spacerH = height/8;
     } else {
         fixed_heigth = '550'
-        svg_create(fixed_heigth)
+        svg_create2(fixed_heigth)
         elementw = svg.node().getBoundingClientRect();
         width = elementw.width;
+        spacer = width/8;
+        
         height = 550;
-        spacer = width/8;   
         spacerH = height/4;
     }
-    console.log(fixed_heigth, spacer)
+    console.log('third listener',fixed_heigth, spacer)
     
 }
 
 // Attaching the event listener function to window's resize event
-window.addEventListener("resize", displaySVGCorrectHeight);
+// window.addEventListener("resize", displaySVGCorrectHeight);
 
 // Calling the function for the first time
 displaySVGCorrectHeight();
 
+// if (w<800){
+//     height = 400;
+//     spacerH = height/8;
+// } else {
+//     height = 550;
+//     spacerH = height/4;
+// }
 
 function drawSim(){
     
     if (w<800) {
-        s = 6
+        s = 5
         h_center = 3.1 * spacerH
         v_center = height / 1.4
-        r_mod = 22
+        r_mod = 9
     } else {
         s = 5
         h_center = 1.9 * spacerH
