@@ -272,6 +272,9 @@ stroke-linejoin: round;
 .caption {
   font-weight: bold;
 }
+.numero_circulos{
+    font-size: 40px;
+}
 /*_______type attributes here*/
 h1{
     font-family: 'IBM Plex Serif';
@@ -561,9 +564,10 @@ h1,h2,h3,h4,h5,h6{
             flex-direction: column;
             width: 100%;
             align-items: flex-start;
+            /* background-color: wheat; */
         }
         ._holder {
-            flex-basis: 100%;
+            flex-basis: 25%;
             padding: 1%;
             opacity: .6;
         }
@@ -599,7 +603,6 @@ h1,h2,h3,h4,h5,h6{
         .subcats{
             margin-bottom: 20px;
         }
-
         /*_______map*/
         .countries {
         fill: none;
@@ -613,6 +616,9 @@ h1,h2,h3,h4,h5,h6{
         }
         .caption {
         font-weight: bold;
+        }
+        .numero_circulos{
+            font-size: 24px;
         }
         /*_______type attributes here*/
         h1{

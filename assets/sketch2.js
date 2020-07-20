@@ -2,7 +2,6 @@
 // d3dfda
 
 //dando oi para o navegador - hi to our browser
-console.log('hi dere');
 
 var data = [
     {tipo: 'Estrutura', abs: 100, per: 2, nome: 'Estrutura'}, 
@@ -21,38 +20,109 @@ console.log(data);
     
 //carregar 2o infografico - loading our 2nd viz
 
-var svg = d3
-.select('#viz2')
-// .style('background-color','#ebf5f5')
-.append('svg')
-.attr('class', 'secondViz')
-.attr('width', '100%')
-.attr('height', '550px')
-.call(responsivefy)
-;
+function svg_create(height) {
+    svg = d3
+    .select('#viz2')
+    // .style('background-color','#ebf5f5')
+    .append('svg')
+    .attr('class', 'secondViz')
+    .attr('width', '100%')
+    .attr('height', height)
+    ;
 
-var elementw = svg.node().getBoundingClientRect();
-console.log(elementw.width);
-console.log(elementw.height);
+}
 
-var width = elementw.width;
-var height = elementw.height;
+function displaySVGCorrectHeight(){
+    // Get width and height of the window excluding scrollbars
+    w = document.documentElement.clientWidth; 
 
-var spacer = width/8;
-var spacerH = height/4;
+    if (w<800){
+        fixed_heigth = '400'
+        svg_create(fixed_heigth)
+        elementw = svg.node().getBoundingClientRect();
+        width = elementw.width;
+        height = elementw.height;
+        spacer = width/16;
+        spacerH = height/8;
+    } else {
+        fixed_heigth = '550'
+        svg_create(fixed_heigth)
+        elementw = svg.node().getBoundingClientRect();
+        width = elementw.width;
+        height = elementw.height;
+        spacer = width/8;   
+        spacerH = height/4;
+    }
+    console.log(fixed_heigth, spacer)
+    
+}
 
-var simulation = d3.forceSimulation(data)
-.force('charge', d3.forceManyBody().strength(5))
-.force('center', d3.forceCenter(1.8*spacerH, height / 2 ))
-.force('collision', d3.forceCollide().radius(function(d) {
-    return d.abs/10;
-    }))
-.on('tick', ticked)
-;
+// Attaching the event listener function to window's resize event
+window.addEventListener("resize", displaySVGCorrectHeight);
+
+// Calling the function for the first time
+displaySVGCorrectHeight();
 
 
+function drawSim(){
+    
+    if (w<800) {
+        s = 6
+        h_center = 3.1 * spacerH
+        v_center = height / 1.4
+        r_mod = 22
+    } else {
+        s = 5
+        h_center = 1.9 * spacerH
+        v_center = height / 2
+        r_mod = 9
+    }
+    
+    simulation = d3.forceSimulation(data)
+    .force('charge', d3.forceManyBody().strength(s))
+    .force('center', d3.forceCenter(h_center, v_center))
+    .force('collision', d3.forceCollide().radius(function(d) {
+        return d.abs/r_mod;
+        }))
+    .on('tick', ticked)
+    ;
+
+}
+
+drawSim();
+
+function defineCoor(){
+    if (w<800) {
+        text_pos = -62
+        text_pos1 = -20
+        labelxpos = 4*spacer
+        labelypos = 18
+        c_mod = 23
+        y1 = 4.5
+        y2 = 4.8
+        y3 = 5.1
+        y4 = 7.2
+        y5 = 5.7
+        y6 = 6
+    } else {
+        text_pos = 100
+        text_pos1 = -20
+        labelxpos = 4*spacer
+        labelypos = 22
+        c_mod = 9
+        y1 = 2.2
+        y2 = 2.4
+        y3 = 2.6
+        y4 = 6.7
+        y5 = 3
+        y6 = 3.2
+
+    }
+}
 
 function ticked() {
+
+    defineCoor()
 
     var u = d3.select('#viz2')
     .select('svg')
@@ -65,7 +135,7 @@ function ticked() {
     .select('svg')
     .selectAll('text.nodelabel')
     .data(data)
-    .attr('transform','translate(100,0)')
+    .attr('transform',`translate(${text_pos},0)`)
     ;
     
     t.enter()
@@ -80,8 +150,8 @@ function ticked() {
     .merge(t)
     .on('mouseover', t_on)
     .attr('text-anchor', 'left')
-    .attr('x', function(){ return 4*spacer})
-    .attr('y', function(d,i){return 22*(i+1)})
+    .attr('x', labelxpos)
+    .attr('y', function(d,i){return labelypos*(i+1)})
     ;
     
     u.enter()
@@ -93,7 +163,7 @@ function ticked() {
     .attr('stroke-width', '4px')
     // .style('mix-blend-mode', 'multiply')
     .attr('id', function(d){return '_' + d.abs})
-    .attr('r', function(d) {return d.abs/10;})
+    .attr('r', function(d) {return d.abs/c_mod;})
     .merge(u)
     .on('mouseover', m_on)
     .attr('cx', function(d) {return d.x;})
@@ -103,22 +173,76 @@ function ticked() {
     u.exit().remove();
 }
 
+function addText(one,two,three){
+
+    defineCoor()
+
+    t = d3.select('#viz2')
+        .select('svg')
+        .append('g')
+        .attr('class','xtraData')
+        .attr('id',one + '_groupTxt')
+        ;
+        
+        // block of text here
+        t
+        .append('text')
+        .text(function(){return two.substr(1)})
+        .attr('class','numero_circulos')
+        .attr('x', labelxpos)
+        .attr('y', function(){ return y1*spacerH})
+        ;
+        
+        t
+        .append('text')
+        .text('MENÇÕES')
+        .attr('class', 'nodelabel')
+        .attr('x', labelxpos)
+        .attr('y', function(){ return y2*spacerH})
+        ;
+        
+        t
+        .append('line')
+        .attr('x1',labelxpos)
+        .attr('y1', function(){ return y3*spacerH})
+        .attr('x2',function(){ return y4*spacer})
+        .attr('y2', function(){ return y3*spacerH})
+        .attr('stroke','black')
+        ;
+        
+        t
+        .append('text')
+        .text(function(){return three.substr(1) + '%'})
+        .attr('class','numero_circulos')
+        .attr('x', labelxpos)
+        .attr('y', function(){ return y5*spacerH} )
+        ;
+        
+        t
+        .append('text')
+        .text('DO TOTAL')
+        .attr('class', 'nodelabel')
+        .attr('x', labelxpos)
+        .attr('y', function(){ return y6*spacerH} )
+        ;
+
+        t
+        .attr('transform',`translate(${text_pos},${text_pos1})`);
+}
+
 function m_on(){
     var This = d3.select(this);
     
     d3.select('#viz2')
     .selectAll('circle')
     .attr('stroke', 'none')
-    // .attr('stroke-width', 0)
     ;
     
     d3.selectAll('.nodelabel')
     .style('font-weight', 500)
     .attr('fill', 'black')
-    /*.attr('opacity',.4)*/
     .call(restFunction)
     ;
-    
     
     function restFunction(){
         
@@ -128,12 +252,9 @@ function m_on(){
         ;
         
         var thisId = This.attr('id');
-        var thisTipo = This.attr('tipo');
         var thisCl = This.attr('class');
         var thisName = This.attr('nome');
-        
-        console.log('#' + thisName + '_Label');
-        
+                
         d3
         .select('#' + thisName + '_Label')
         .style('font-weight', 700)
@@ -145,57 +266,7 @@ function m_on(){
         .remove()
         ;
         
-        var t = d3.select('#viz2')
-        .select('svg')
-        .append('g')
-        .attr('class','xtraData')
-        .attr('id',thisName + '_groupTxt')
-        ;
-        
-        // block of text here
-        t
-        .append('text')
-        .text(function(){return thisId.substr(1)})
-        .attr('font-size','60px')
-        // .style('font-weight','900')
-        .attr('x', function(){ return 4*spacer})
-        .attr('y', function(){ return 2.5*spacerH})
-        ;
-        
-        t
-        .append('text')
-        .text('MENÇÕES')
-        .attr('x', function(){ return 4*spacer})
-        .attr('y', function(){ return 2.7*spacerH})
-        ;
-        
-        t
-        .append('line')
-        .attr('x1',function(){ return 4*spacer})
-        .attr('y1', function(){ return 3*spacerH})
-        .attr('x2',function(){ return 6.7*spacer})
-        .attr('y2', function(){ return 3*spacerH})
-        .attr('stroke','black')
-        ;
-        
-        t
-        .append('text')
-        .text(function(){return thisCl.substr(1) + '%'})
-        .attr('font-size','60px')
-        // .style('font-weight','900')
-        .attr('x', function(){ return 4*spacer})
-        .attr('y', function(){ return 3.7*spacerH} )
-        ;
-        
-        t
-        .append('text')
-        .text('DO TOTAL')
-        .attr('x', function(){ return 4*spacer})
-        .attr('y', function(){ return 3.9*spacerH} )
-        ;
-
-        t
-        .attr('transform','translate(100,-20)');
+        addText(thisName,thisId,thisCl);
     }
     
 }
@@ -211,7 +282,6 @@ function t_on(){
     d3.selectAll('.nodelabel')
     .style('font-weight', 500)
     .attr('fill', 'black')
-    /*.attr('opacity',.4)*/
     .call(restFunction)
     ;
     
@@ -221,7 +291,6 @@ function t_on(){
         This
         .style('font-weight', 700)
         .attr('fill', '#eea4b5')
-        /*.attr('opacity',1)*/
         ;
         
         var thisAbs = This.attr('abs');
@@ -229,7 +298,6 @@ function t_on(){
         var thisPer = This.attr('per');
         
         d3.select('#viz2')
-        // .selectAll('circle')
         .select('#' + thisAbs)
         .attr('stroke', 'black')
         .attr('stroke-width', 2)
@@ -239,88 +307,8 @@ function t_on(){
         .remove()
         ;
         
-        var t = d3.select('#viz2')
-        .select('svg')
-        .append('g')
-        .attr('class','xtraData')
-        .attr('id',thisName + '_groupTxt')
-        ;
+        addText(thisName,thisAbs,thisPer);
         
-        // block of text here
-        t
-        .append('text')
-        .text(function(){return thisAbs.substr(1)})
-        .attr('font-size','60px')
-        .style('font-weight','500')
-        .attr('x', function(){ return 4*spacer})
-        .attr('y', function(){ return 2.5*spacerH})
-        ;
-        
-        t
-        .append('text')
-        .text('MENÇÕES')
-        .attr('x', function(){ return 4*spacer})
-        .attr('y', function(){ return 2.7*spacerH})
-        ;
-        
-        t
-        .append('line')
-        .attr('x1',function(){ return 4*spacer})
-        .attr('y1', function(){ return 3*spacerH})
-        .attr('x2',function(){ return 6.7*spacer})
-        .attr('y2', function(){ return 3*spacerH})
-        .attr('stroke','black')
-        ;
-        
-        t
-        .append('text')
-        .text(function(){return thisPer.substr(1) + '%'})
-        .attr('font-size','60px')
-        .style('font-weight','500')
-        .attr('x', function(){ return 4*spacer})
-        .attr('y', function(){ return 3.7*spacerH} )
-        ;
-        
-        t
-        .append('text')
-        .text('DO TOTAL')
-        .attr('x', function(){ return 4*spacer})
-        .attr('y', function(){ return 3.9*spacerH} )
-        ;
-
-        t
-        .attr('transform','translate(100,-20)');
     }
     
-}
-
-
-
-
-// desenhar o gráfico de maneira responsiva / responsive redrawing of our viz
-function responsivefy(svg) {
-    // get container + svg aspect ratio
-    var container = d3.select(svg.node().parentNode),
-        width = parseInt(svg.style("width")),
-        height = parseInt(svg.style("height")),
-        aspect = width / height;
-
-    // add viewBox and preserveAspectRatio properties,
-    // and call resize so that svg resizes on inital page load
-    svg.attr("viewBox", "0 0 " + width + " " + height)
-        .attr("perserveAspectRatio", "xMinYMid")
-        .call(resize);
-
-    // to register multiple listeners for same event type, 
-    // you need to add namespace, i.e., 'click.foo'
-    // necessary if you call invoke this function for multiple svgs
-    // api docs: https://github.com/mbostock/d3/wiki/Selections#on
-    d3.select(window).on("resize." + container.attr("id"), resize);
-
-    // get width of container and resize svg to fit it
-    function resize() {
-        var targetWidth = parseInt(container.style("width"));
-        svg.attr("width", targetWidth);
-        svg.attr("height", Math.round(targetWidth / aspect));
-    }
 }

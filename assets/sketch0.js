@@ -1,55 +1,80 @@
-// The svg
-var svg = d3
-    .select('#viz0')
-    // .style('background-color','#ebf5f5')
-    .append('svg')
-    .attr('width', '100%')
-    .attr('height', '600px')
-    .call(responsivefy)
-    ;
-
-var t = d3.transition()
+let t = d3.transition()
     .duration(750)
-    .ease(d3.easeLinear);
-
-var elementw = d3
-    .select('#viz0')
-    .select('svg')
-    .node().getBoundingClientRect();
-    
-console.log(elementw.width);
-console.log(elementw.height);
-
-var width = elementw.width;
-var height = elementw.height;
-
-var spacer = height/5;
-
-// Map and projection
-// var path = d3.geoPath();
-var projection = d3.geoMercator()   
-    // .scale(300 / Math.PI)
-    // .translate([300, 225])
-    .scale(6.8*spacer)
-    .translate([11.8*spacer, 80])
+    .ease(d3.easeLinear)
     ;
-var path = d3.geoPath()
-    .projection(projection);
 
 // Data and color scale
-var dados = d3.map();
-var colorScheme = d3.schemeRdPu[6];
+let dados = d3.map();
+
+let colorScheme = d3.schemeRdPu[6];
+
 colorScheme.unshift("#eee");
-var colorScale = d3.scaleThreshold()
+
+let colorScale = d3.scaleThreshold()
     .domain([1, 25, 50, 100, 200, 800])
-    .range(colorScheme);
+    .range(colorScheme)
+    ;
+
+function svg_create(height) {
+    svg = d3
+    .select('#viz0')
+    .append('svg')
+    .attr('width', '100%')
+    .attr('height', height)
+    // .style('background-color','red')
+    ;
+}
+
+
+function displaySVGCorrectHeight(){
+    // Get width and height of the window excluding scrollbars
+    w = document.documentElement.clientWidth; 
+        
+    if (w<800){
+        fixed_heigth = '300px'
+        spacer = 300/5;
+
+        projection = d3.geoMercator()   
+        .scale(4*spacer)
+        .translate([6.5*spacer, 40])
+        ;
+
+        svg_create(fixed_heigth)
+
+    } else {
+        fixed_heigth = '650px'
+        spacer = 650/5;
+        
+        projection = d3.geoMercator()   
+        .scale(6.8*spacer)
+        .translate([11*spacer, 80])
+        ;
+        
+        svg_create(fixed_heigth)
+    }
+    console.log(fixed_heigth, spacer)
+    
+}
+
+// Attaching the event listener function to window's resize event
+window.addEventListener("resize", displaySVGCorrectHeight);
+
+// Calling the function for the first time
+displaySVGCorrectHeight();
+
+console.log(svg)
+
+let path = d3.geoPath()
+    .projection(projection)
+    ;
 
 // Legend
 var g = svg.append("g")
     .attr("class", "legendThreshold")
-    .attr("transform", "translate(" + 40 + "," + 20 + ")")
+    .attr("transform", `translate(${spacer / 8},${spacer / 4})`)
     .attr('z-index',1)
     ;
+
 g.append("text")
     .attr("class", "caption")
     .attr("x", 0)
@@ -64,20 +89,20 @@ var legend = d3.legendColor()
     .shapePadding(4)
     .scale(colorScale)
     ;
+
 svg.select(".legendThreshold")
-    .call(legend);
+.call(legend)
+;
 
 // Load external data and boot
 d3.queue()
     .defer(d3.json, "data/BRA2.json")
     .defer(d3.csv, "data/mapabr.csv", function(d) { dados.set(d.fips, +d.total); })
-    .await(ready);
+    .await(ready)
+    ;
     
 function ready(error, topo) {
     if (error) throw error;
-    
-    // console.log(topo.objects.units.geometries);
-    console.log(topo.features);
     
     // Draw the map
     d3
@@ -92,15 +117,30 @@ function ready(error, topo) {
                 // Pull data for this country
                 d.total = dados.get(d.id) || 0;
                 // Set the color
-                // console.log(dados.get(d.id));
                 return colorScale(d.total);
             })
             .attr("d", path)
             .on('mouseover', m_on)
-            // .on('mouseout', m_out)
             ;
             
         function m_on(d){
+
+            var This = d3.select(this);
+            console.log(This)
+            var ThisData = This._groups["0"]["0"].__data__;
+            var thisFill = This._groups["0"]["0"].attributes["0"].nodeValue;
+
+            if (w<800){
+                h_center = w/2.5;
+                t1_vcenter = 210;
+                t2_vcenter = 250;
+                ratio = 3.5;
+            } else {
+                h_center = 2*spacer;
+                t1_vcenter = 350;
+                t2_vcenter = 390;
+                ratio = 11;
+            }
             
             d3
             .select('#viz0')
@@ -110,11 +150,6 @@ function ready(error, topo) {
             .transition(t)
             ;
             
-            var This = d3.select(this);
-            var ThisData = This._groups["0"]["0"].__data__;
-            var thisFill = This._groups["0"]["0"].attributes["0"].nodeValue;
-            console.log(ThisData);
-            console.log(This._groups["0"]["0"].attributes["0"].nodeValue);
             
             var gDash = d3
             .select('#viz0')
@@ -127,18 +162,17 @@ function ready(error, topo) {
             gDash
             .append('circle')
             .transition(t)
-            .attr('cx', 2*spacer)
-            .attr('cy', 350)
-            .attr('r', function(d,i){return 11*(Math.sqrt(ThisData.total/Math.PI))})
+            .attr('cx', h_center)
+            .attr('cy', t1_vcenter)
+            .attr('r', function(d,i){return ratio*(Math.sqrt(ThisData.total/Math.PI))})
             .attr('fill', thisFill)
             .attr('stroke', '#abc1c1')
-            // .attr('opacity', .2 )
             ;
             
             gDash
             .append('text')
-            .attr('x', 2*spacer)
-            .attr('y', 350)
+            .attr('x', h_center)
+            .attr('y', t1_vcenter)
             .text(function(d){return ThisData.properties.name})
             .attr('fill', 'black')
             .attr('opacity', 1 )
@@ -150,56 +184,16 @@ function ready(error, topo) {
             
              gDash
             .append('text')
-            .attr('x', 2*spacer)
-            .attr('y', 390)
+            .attr('x', h_center)
+            .attr('y', t2_vcenter)
             .text(function(d){return ThisData.total})
             .attr('fill', 'black')
             .attr('opacity', 1 )
             .attr('text-anchor','middle')
             .style('text-transform','uppercase')
             .style('font-size','42px')
-            // .style('font-weight',700)
             ;
             
         }
         
-        function m_out(d){
-            
-            d3
-            .select('#viz0')
-            .select('svg')
-            .select('g.valor1')
-            .remove()
-            .transition(t)
-            ;
-            
-        }
-}
-
-
-function responsivefy(svg) {
-    // get container + svg aspect ratio
-    var container = d3.select(svg.node().parentNode),
-        width = parseInt(svg.style("width")),
-        height = parseInt(svg.style("height")),
-        aspect = width / height;
-
-    // add viewBox and preserveAspectRatio properties,
-    // and call resize so that svg resizes on inital page load
-    svg.attr("viewBox", "0 0 " + width + " " + height)
-        .attr("perserveAspectRatio", "xMinYMid")
-        .call(resize);
-
-    // to register multiple listeners for same event type, 
-    // you need to add namespace, i.e., 'click.foo'
-    // necessary if you call invoke this function for multiple svgs
-    // api docs: https://github.com/mbostock/d3/wiki/Selections#on
-    d3.select(window).on("resize." + container.attr("id"), resize);
-
-    // get width of container and resize svg to fit it
-    function resize() {
-        var targetWidth = parseInt(container.style("width"));
-        svg.attr("width", targetWidth);
-        svg.attr("height", Math.round(targetWidth / aspect));
-    }
 }
