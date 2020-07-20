@@ -77,10 +77,10 @@ displaySVGCorrectHeight();
 function drawSim(){
     
     if (w<800) {
-        s = 5
+        s = 6
         h_center = 3.1 * spacerH
         v_center = height / 1.4
-        r_mod = 9
+        r_mod = 22
     } else {
         s = 5
         h_center = 1.9 * spacerH
